@@ -26,7 +26,7 @@ def get_jira_ticket_status(ticket_number):
 
 def change_ticket_status(ticket_number, status):
     '''
-    :param ticket_number: SPDBPIPE-xxx
+    :param ticket_number
     :param status: int
     :return: api response
     status
