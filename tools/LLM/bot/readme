@@ -1,0 +1,73 @@
+1. create the python project directory
+mkdir my-chatbot
+cd my-chatbot
+touch requirements.txt
+
+
+2. Add below python dependencies to requirements.txt and save it.
+pypdf
+langchain
+torch
+accelerate
+bitsandbytes
+transformers
+sentence_transformers
+faiss_cpu
+chainlit
+huggingface_hub
+ctransformers
+lazy-object-proxy==1.4.*
+
+
+3. install the required python packages
+python3 -m pip install -r requirements.txt
+
+
+4. download the llama 2 model made for CPU from below location and keep it under directly python project directory if it is downloaded in other location
+https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGML/resolve/main/llama-2-7b-chat.ggmlv3.q8_0.bin
+
+
+5. create the data directory under the project directory.
+copy your pdf books inside data directory. the bot will be created on top of it.
+mkdir data
+
+
+6. create the vector database store, folder under project directory, which will hold tokens and its embedding information.
+mkdir -p vectorstore/db_faiss
+
+
+7. keep it under project directory
+https://github.com/tiffley/study/blob/main/LLM/ingest.py
+
+
+8. write the ingestion python script which reads the given pdfs files under data directory and creates the embeddings of the content and stores them in the vector db.
+
+
+9. run the ingest.py code
+python3 ingest.py
+
+
+10. if it successfully finishes, you will see two files creted under vectorstore/db_faiss directory
+index.faiss
+index.pkl
+
+
+11. next step is to build the chat bot using llama2 model, chainlit bot framework and your data.
+
+
+12. create the model.py python file. you can copy paste the code as well. i suggest, read each line and write the line in your model.py file;
+that’s how you can build your understanding about the chainlit, llama2.
+
+
+13. keep it under project directory
+chainlit run model.py -w
+
+
+14. you should see below logs and information about bot webpage is live
+➜  iceberg-chatbot chainlit run model.py -w
+/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/langchain/__init__.py:39: UserWarning: Importing PromptTemplate from langchain root module is no longer supported.
+  warnings.warn(
+2023-10-18 10:15:06 - Your app is available at http://localhost:8000
+
+Access below url in case if it is not opened in your browser
+http://localhost:8000

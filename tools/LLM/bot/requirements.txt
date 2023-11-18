@@ -1,0 +1,12 @@
+lazy-object-proxy==1.4.*
+pypdf
+langchain
+torch
+accelerate
+bitsandbytes
+transformers
+sentence_transformers
+faiss_cpu
+chainlit
+huggingface_hub
+ctransformers
