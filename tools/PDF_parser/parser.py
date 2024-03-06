@@ -1,12 +1,12 @@
 from tika import parser
 
 
-fn = "hr.pdf"
+fn = "ana.pdf"
 
 tg = ['quality by enabling an organization']
 # tg = ['仙台', '羽田']
 
-target_page = 17
+target_page = 1
 
 
 def parse(fn) -> list:
