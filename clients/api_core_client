@@ -1,0 +1,61 @@
+import requests
+import json
+from time import sleep
+
+class ApiCoreClient:
+    def __init__(self, host, token, poke_interval=20, max_retry=10):
+        self.host = host  # 'https://xxx.com'
+        self.headers = {
+            "Authorization": f"Basic {token}",
+            "Content-Type": "application/json"
+        }
+        self.poke_interval = poke_interval
+        self.max_retry = max_retry
+
+    def _call(self, method: str, endpoint: str, data: dict = None, content_only=True):
+        if method == "get":
+            req = requests.get
+        if method == "post":
+            req = requests.post
+        if method == "patch":
+            req = requests.patch
+        if method == "put":
+            req = requests.put
+        i = 0
+        while True:
+            i += 1
+            if i > self.max_retry:
+                raise Exception(f'Failed to {method} {endpoint} after {self.max_retry} attempts')
+            try:
+                print(f'{i}/{self.max_retry} poking {endpoint}')
+                response = req(endpoint, headers=self.headers, json=data)
+                print(response)
+                response.raise_for_status()
+                return response.text if content_only else response
+            except requests.exceptions.HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except requests.exceptions.RequestException as req_err:
+                print(f"Request error occurred: {req_err}")
+            except Exception as e:
+                print(f'failed to {method} {endpoint}, {e}')
+            sleep(self.poke_interval)
+
+    def get_request(self, endpoint: str, data: dict = None, content_only=True) -> requests.get:
+        url = self.host + endpoint
+        return self._call("get", url, data, content_only)
+
+    def get_li_request(self, endpoint: str, data: dict = None) -> list:
+        di = json.loads(self.get_request(endpoint, data=data))
+        return di['data']['items']
+
+    def get_di_request(self, endpoint: str, data: dict = None) -> dict:
+        return json.loads(self.get_request(endpoint, data=data))
+
+    def post_request(self, endpoint: str, data: dict = None, content_only=False):
+        url = self.host + endpoint
+        return self._call("post", url, data, content_only)
+
+    def patch_request(self, endpoint: str, data: dict = None, content_only=False):
+        url = self.host + endpoint
+        return self._call("patch", url, data, content_only)
+
